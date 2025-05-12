@@ -7,7 +7,7 @@
         body { font-family: Arial; margin: 40px; }
         .chat-box { border: 1px solid #ccc; padding: 10px; height: 400px; overflow-y: scroll; background: #f9f9f9; border-radius: 4px; }
         .message { margin-bottom: 10px; }
-        .user { font-weight: bold; color: blue; }
+        .me { font-weight: bold; color: blue; }
         .assistant { font-weight: bold; color: green; }
         #prompt { border: 1px solid #CCC; border-radius: 4px; height: 40px; padding: 0px 10px; }
         .prompt-box { margin-top: 10px; }
@@ -40,7 +40,7 @@
             const input = document.getElementById('prompt');
             const message = input.value;
             if (!message) return;
-            appendMessage('user', message);
+            appendMessage('me', message);
             input.value = '';
 
             const res = await fetch('/ask', {

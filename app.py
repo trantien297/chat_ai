@@ -60,7 +60,7 @@ def ask():
     # Ghép lịch sử thành prompt
     chat_history = "\n".join([f"{item['role']}: {item['content']}" for item in history])
 
-    prompt = bot_intro + chat_history
+    prompt = bot_intro + chat_history + "\nassistant:"
 
     with model.chat_session():
         ai_response = model.generate(prompt, max_tokens=200).strip()
@@ -77,4 +77,6 @@ def ask():
     return jsonify({"response": ai_response})
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    # app.run(debug=True)
+    app.run(host="0.0.0.0", port=5000, debug=True)
+
