@@ -28,10 +28,16 @@ def speak(text):
     engine.say(text)
     engine.runAndWait()
 
+# Promt chat
+def inputPromt():
+    user_input = input("####### You: ")
+    return user_input
+
 # Vòng lặp chính
 with model.chat_session():
     while True:
-        query = listen()
+        # query = listen()
+        query = inputPromt()
         if query:
             response = model.generate(query, max_tokens=256)
             print(f"AI: {response}")
