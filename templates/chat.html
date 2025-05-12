@@ -8,7 +8,7 @@
         .chat-box { border: 1px solid #ccc; padding: 10px; height: 400px; overflow-y: scroll; background: #f9f9f9; border-radius: 4px; }
         .message { margin-bottom: 10px; }
         .user { font-weight: bold; color: blue; }
-        .bot { font-weight: bold; color: green; }
+        .assistant { font-weight: bold; color: green; }
         #prompt { border: 1px solid #CCC; border-radius: 4px; height: 40px; padding: 0px 10px; }
         .prompt-box { margin-top: 10px; }
         .btn-prompt { border-radius: 4px; height: 40px; padding: 0px 14px; font-weight: 700; }
@@ -49,7 +49,7 @@
                 body: JSON.stringify({ message })
             });
             const data = await res.json();
-            appendMessage('bot', data.response);
+            appendMessage('assistant', data.response);
             speak(data.response); // text to speech
         }
 
