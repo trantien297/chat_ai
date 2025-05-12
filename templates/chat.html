@@ -2,22 +2,28 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>Chatbot với AI + Voice</title>
+    <title>Chatbot with AI + Voice</title>
     <style>
         body { font-family: Arial; margin: 40px; }
-        .chat-box { border: 1px solid #ccc; padding: 10px; height: 400px; overflow-y: scroll; background: #f9f9f9; }
+        .chat-box { border: 1px solid #ccc; padding: 10px; height: 400px; overflow-y: scroll; background: #f9f9f9; border-radius: 4px; }
         .message { margin-bottom: 10px; }
         .user { font-weight: bold; color: blue; }
         .bot { font-weight: bold; color: green; }
+        #prompt { border: 1px solid #CCC; border-radius: 4px; height: 40px; padding: 0px 10px; }
+        .prompt-box { margin-top: 10px; }
+        .btn-prompt { border-radius: 4px; height: 40px; padding: 0px 14px; font-weight: 700; }
+        .btn-prompt.send-message { background-color: #000; color: #FFF; border: 1px solid #000; }
+        .btn-prompt.send-voice { background-color: orange; color: #000; border: 1px solid orange; }
     </style>
 </head>
 <body>
-    <h2>Trò chuyện với AI</h2>
+    <h2>Chat with AI</h2>
     <div class="chat-box" id="chat"></div>
-
-    <input type="text" id="prompt" placeholder="Nhập tin nhắn..." style="width:70%">
-    <button onclick="sendMessage()">Gửi</button>
-    <button onclick="startVoice()">🎤 Nói</button>
+    <div class="prompt-box">
+        <input type="text" id="prompt" placeholder="Enter a message..." style="width:70%">
+        <button class="btn-prompt send-message" onclick="sendMessage()">Send</button>
+        <button class="btn-prompt send-voice" onclick="startVoice()">🎤 Voice</button>
+    </div>
 
     <script>
         const chatBox = document.getElementById('chat');
