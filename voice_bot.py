@@ -1,4 +1,38 @@
+import speech_recognition as sr
+import pyttsx3
 from gpt4all import GPT4All
-model = GPT4All("Meta-Llama-3-8B-Instruct.Q4_0.gguf") # downloads / loads a 4.66GB LLM
+
+# Load mô hình GPT4All
+model = GPT4All("Meta-Llama-3-8B-Instruct.Q4_0.gguf")
+
+# Cài đặt text-to-speech
+engine = pyttsx3.init()
+engine.setProperty('rate', 150)
+
+# Hàm để lắng nghe người dùng
+def listen():
+    r = sr.Recognizer()
+    with sr.Microphone() as source:
+        print("Bạn nói gì đó...")
+        audio = r.listen(source)
+        try:
+            text = r.recognize_google(audio, language="vi-VN")
+            print(f"Bạn nói: {text}")
+            return text
+        except:
+            print("Không nhận diện được.")
+            return None
+
+# Hàm để nói lại phản hồi
+def speak(text):
+    engine.say(text)
+    engine.runAndWait()
+
+# Vòng lặp chính
 with model.chat_session():
-    print(model.generate("How can I run LLMs efficiently on my laptop?", max_tokens=1024))
+    while True:
+        query = listen()
+        if query:
+            response = model.generate(query, max_tokens=256)
+            print(f"AI: {response}")
+            speak(response)
