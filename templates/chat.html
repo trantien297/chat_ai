@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Chatbot với AI + Voice</title>
+    <style>
+        body { font-family: Arial; margin: 40px; }
+        .chat-box { border: 1px solid #ccc; padding: 10px; height: 400px; overflow-y: scroll; background: #f9f9f9; }
+        .message { margin-bottom: 10px; }
+        .user { font-weight: bold; color: blue; }
+        .bot { font-weight: bold; color: green; }
+    </style>
+</head>
+<body>
+    <h2>Trò chuyện với AI</h2>
+    <div class="chat-box" id="chat"></div>
+
+    <input type="text" id="prompt" placeholder="Nhập tin nhắn..." style="width:70%">
+    <button onclick="sendMessage()">Gửi</button>
+    <button onclick="startVoice()">🎤 Nói</button>
+
+    <script>
+        const chatBox = document.getElementById('chat');
+
+        function appendMessage(sender, text) {
+            const msg = document.createElement('div');
+            msg.classList.add('message');
+            msg.innerHTML = `<span class="${sender}">${sender}:</span> ${text}`;
+            chatBox.appendChild(msg);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        async function sendMessage() {
+            const input = document.getElementById('prompt');
+            const message = input.value;
+            if (!message) return;
+            appendMessage('user', message);
+            input.value = '';
+
+            const res = await fetch('/ask', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message })
+            });
+            const data = await res.json();
+            appendMessage('bot', data.response);
+            speak(data.response); // text to speech
+        }
+
+        function startVoice() {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (!SpeechRecognition) {
+                alert("Trình duyệt của bạn không hỗ trợ nhận diện giọng nói. Vui lòng dùng Google Chrome.");
+                return;
+            }
+
+            const recognition = new SpeechRecognition();
+            recognition.lang = 'vi-VN';
+
+            recognition.onresult = function(event) {
+                const text = event.results[0][0].transcript;
+                document.getElementById('prompt').value = text;
+            };
+
+            recognition.start();
+        }
+
+
+        function speak(text) {
+            const synth = window.speechSynthesis;
+            const utter = new SpeechSynthesisUtterance(text);
+            utter.lang = 'vi-VN';
+            synth.speak(utter);
+        }
+    </script>
+</body>
+</html>
