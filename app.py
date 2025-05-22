@@ -2,12 +2,9 @@ import os
 import json
 from datetime import datetime
 from flask import Flask, render_template, request, jsonify
-from gpt4all import GPT4All
+from openai import OpenAI
 
 app = Flask(__name__)
-
-# === Khởi tạo model ===
-model = GPT4All("Meta-Llama-3-8B-Instruct.Q4_0.gguf", allow_download=True)
 
 # Đọc cấu hình bot từ config.json
 with open("ai_config.json", "r", encoding="utf-8") as f:
@@ -35,6 +32,30 @@ def save_history(history):
     path = get_history_path()
     with open(path, "w", encoding="utf-8") as f:
         json.dump(history, f, indent=2, ensure_ascii=False)
+        
+def call_ai(prompt):
+    client = OpenAI(
+        base_url="https://openrouter.ai/api/v1",
+        api_key="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",
+    )
+
+    completion = client.chat.completions.create(
+        extra_headers={
+            "HTTP-Referer": "<YOUR_SITE_URL>", # Optional. Site URL for rankings on openrouter.ai.
+            "X-Title": "<YOUR_SITE_NAME>", # Optional. Site title for rankings on openrouter.ai.
+        },
+        model="meta-llama/llama-4-maverick:free",
+        messages=[
+            {
+                "role": "user",
+                "content": prompt
+            }
+        ]
+    )
+    
+    # return completion.choices[0].message.content
+    responses = [choice.message.content for choice in completion.choices]
+    return "\n---\n".join(responses)
 
 @app.route("/")
 def index():
@@ -62,8 +83,10 @@ def ask():
 
     prompt = bot_intro + chat_history + "\nassistant:"
 
-    with model.chat_session():
-        ai_response = model.generate(prompt, max_tokens=200).strip()
+    # with model.chat_session():
+    #     ai_response = model.generate(prompt, max_tokens=200).strip()
+    
+    ai_response = call_ai(prompt)
 
     # Thêm phản hồi AI
     history.append({
@@ -79,4 +102,3 @@ def ask():
 if __name__ == "__main__":
     # app.run(debug=True)
     app.run(host="0.0.0.0", port=5000, debug=True)
-

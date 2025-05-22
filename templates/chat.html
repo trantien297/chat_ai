@@ -71,11 +71,15 @@
             recognition.start();
         }
 
+        function detectLanguage(text) {
+            return /[àáảãạâăêôơư]/i.test(text) ? 'vi-VN' : 'en-US';
+        }
 
         function speak(text) {
             const synth = window.speechSynthesis;
             const utter = new SpeechSynthesisUtterance(text);
-            utter.lang = 'vi-VN';
+            // utter.lang = detectLanguage(text);
+            utter.lang = "en-US";
             synth.speak(utter);
         }
     </script>
