@@ -3,6 +3,7 @@ import json
 from datetime import datetime
 from flask import Flask, render_template, request, jsonify
 from openai import OpenAI
+from text_to_speech import text_to_speech
 
 app = Flask(__name__)
 
@@ -98,6 +99,15 @@ def ask():
     save_history(history)
 
     return jsonify({"response": ai_response})
+
+@app.route("/speak", methods=["POST"])
+def speak():
+    data = request.get_json()
+    text = data.get("text", "")
+    audio_path = "./static/audio/output.mp3"
+    text_to_speech(text, audio_path)
+    return jsonify({"audio_url": f"/{audio_path}"})
+    # return text_to_speech(text)
 
 if __name__ == "__main__":
     # app.run(debug=True)

@@ -49,8 +49,10 @@
                 body: JSON.stringify({ message })
             });
             const data = await res.json();
-            appendMessage('assistant', data.response);
+            
             speak(data.response); // text to speech
+
+            appendMessage('assistant', data.response);
         }
 
         function startVoice() {
@@ -75,12 +77,25 @@
             return /[àáảãạâăêôơư]/i.test(text) ? 'vi-VN' : 'en-US';
         }
 
+        // function speak(text) {
+        //     const synth = window.speechSynthesis;
+        //     const utter = new SpeechSynthesisUtterance(text);
+        //     // utter.lang = detectLanguage(text);
+        //     utter.lang = "en-US";
+        //     synth.speak(utter);
+        // }
+
         function speak(text) {
-            const synth = window.speechSynthesis;
-            const utter = new SpeechSynthesisUtterance(text);
-            // utter.lang = detectLanguage(text);
-            utter.lang = "en-US";
-            synth.speak(utter);
+            fetch("/speak", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ text: text })
+            })
+            .then(res => res.json())
+            .then(data => {
+                const audio = new Audio(data.audio_url);
+                audio.play();
+            });
         }
     </script>
 </body>
