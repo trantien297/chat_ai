@@ -1,5 +1,2 @@
 history/*
 !history/.gitkeep
-
-static/audio/*
-!static/audio/.gitkeep
