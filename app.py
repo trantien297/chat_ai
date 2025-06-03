@@ -51,9 +51,10 @@ def call_ai(prompt):
                 "role": "user",
                 "content": prompt
             }
-        ]
+        ],
+        max_tokens=512
     )
-    
+    print('###############', completion, '##################')
     # return completion.choices[0].message.content
     responses = [choice.message.content for choice in completion.choices]
     return "\n---\n".join(responses)
@@ -100,14 +101,14 @@ def ask():
 
     return jsonify({"response": ai_response})
 
-@app.route("/speak", methods=["POST"])
-def speak():
-    data = request.get_json()
-    text = data.get("text", "")
-    audio_path = "./static/audio/output.mp3"
-    text_to_speech(text, audio_path)
-    return jsonify({"audio_url": f"/{audio_path}"})
-    # return text_to_speech(text)
+# @app.route("/speak", methods=["POST"])
+# def speak():
+#     data = request.get_json()
+#     text = data.get("text", "")
+#     audio_path = "./static/audio/output.mp3"
+#     text_to_speech(text, audio_path)
+#     return jsonify({"audio_url": f"/{audio_path}"})
+#     # return text_to_speech(text)
 
 if __name__ == "__main__":
     # app.run(debug=True)

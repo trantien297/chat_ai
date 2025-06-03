@@ -1,4 +1,7 @@
 __pycache__/
+.env
+
+static/
 
 history/*
 !history/.gitkeep

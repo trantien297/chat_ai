@@ -20,7 +20,7 @@
     <h2>Chat with AI</h2>
     <div class="chat-box" id="chat"></div>
     <div class="prompt-box">
-        <input type="text" id="prompt" placeholder="Enter a message..." style="width:70%">
+        <input type="text" id="prompt" placeholder="Enter a message..." style="width:70%" onkeydown="enterKeyMessage(event)">
         <button class="btn-prompt send-message" onclick="sendMessage()">Send</button>
         <button class="btn-prompt send-voice" onclick="startVoice()">🎤 Voice</button>
     </div>
@@ -34,6 +34,10 @@
             msg.innerHTML = `<span class="${sender}">${sender}:</span> ${text}`;
             chatBox.appendChild(msg);
             chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        function enterKeyMessage(event) {
+            if (event.key === "Enter") return sendMessage();
         }
 
         async function sendMessage() {
@@ -77,26 +81,26 @@
             return /[àáảãạâăêôơư]/i.test(text) ? 'vi-VN' : 'en-US';
         }
 
-        // function speak(text) {
-        //     const synth = window.speechSynthesis;
-        //     const utter = new SpeechSynthesisUtterance(text);
-        //     // utter.lang = detectLanguage(text);
-        //     utter.lang = "en-US";
-        //     synth.speak(utter);
-        // }
-
         function speak(text) {
-            fetch("/speak", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ text: text })
-            })
-            .then(res => res.json())
-            .then(data => {
-                const audio = new Audio(data.audio_url);
-                audio.play();
-            });
+            const synth = window.speechSynthesis;
+            const utter = new SpeechSynthesisUtterance(text);
+            // utter.lang = detectLanguage(text);
+            utter.lang = "en-US";
+            synth.speak(utter);
         }
+
+        // function speak(text) {
+        //     fetch("/speak", {
+        //         method: "POST",
+        //         headers: { "Content-Type": "application/json" },
+        //         body: JSON.stringify({ text: text })
+        //     })
+        //     .then(res => res.json())
+        //     .then(data => {
+        //         const audio = new Audio(data.audio_url);
+        //         audio.play();
+        //     });
+        // }
     </script>
 </body>
 </html>
